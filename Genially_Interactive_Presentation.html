@@ -1,0 +1,391 @@
+
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Master Class de Costura Creativa — Presentación Interactiva</title>
+<style>
+  /* Fuentes */
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Pacifico&display=swap');
+
+  :root{
+    --bg:#fbf7f3;
+    --paper:#fff8f5;
+    --piaget:#63A4F7;
+    --vygotsky:#C189F7;
+    --freud:#D60078;
+    --muted:#6b6b6b;
+    --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  }
+
+  html,body{height:100%;background:linear-gradient(180deg,var(--bg),#fff);font-family:Poppins,system-ui,-apple-system; margin:0;color:#222}
+  .wrap{max-width:1100px;margin:28px auto;padding:22px}
+  .card{background:var(--paper);border-radius:18px;padding:20px;box-shadow:var(--card-shadow);overflow:hidden}
+  header{display:flex;gap:18px;align-items:center}
+  .logo{width:110px;height:110px;border-radius:14px;background:linear-gradient(135deg,rgba(99,164,247,0.12),rgba(193,137,247,0.08));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .logo img{width:96px;height:96px;object-fit:cover;border-radius:10px}
+  h1{font-family:Pacifico, cursive;font-size:40px;margin:0;line-height:1;color:#222}
+  .subtitle{color:var(--muted);margin-top:6px;font-size:14px}
+  nav{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+  .tab{background:transparent;border:2px solid rgba(0,0,0,0.06);padding:10px 14px;border-radius:12px;cursor:pointer;transition:all .25s}
+  .tab.active{box-shadow:0 8px 18px rgba(0,0,0,0.06);transform:translateY(-4px)}
+  .hero{display:grid;grid-template-columns:1fr 360px;gap:20px;margin-top:18px}
+  .panel{padding:18px;border-radius:12px;background:linear-gradient(180deg,#fff, #fffaf9)}
+  .timeline{display:flex;gap:8px;align-items:center;margin-top:12px}
+  .day{flex:1;padding:12px;border-radius:10px;background:linear-gradient(90deg,#fff,#fffefc);text-align:center;border:1px dashed rgba(0,0,0,0.04)}
+  .day strong{display:block}
+  /* author blocks */
+  .authors{display:flex;gap:12px;margin-top:14px}
+  .author{flex:1;display:flex;gap:12px;align-items:center;padding:12px;border-radius:12px;background:linear-gradient(135deg,rgba(0,0,0,0.02),transparent)}
+  .avatar{width:72px;height:72px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,0.06)}
+  .avatar img{width:100%;height:100%;object-fit:cover}
+  .author h3{margin:0;font-size:18px}
+  .author p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+  /* content area */
+  .content{margin-top:18px;display:grid;grid-template-columns:1fr 340px;gap:18px}
+  .content .main{min-height:420px}
+  .content .side{position:relative}
+  /* cards for levels */
+  .levels{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .level{background:linear-gradient(180deg,#fff,#fffefc);padding:12px;border-radius:12px;cursor:pointer;border:1px solid rgba(0,0,0,0.03);transition:transform .15s}
+  .level:hover{transform:translateY(-6px)}
+  .level .tag{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:600;font-size:12px;margin-bottom:8px}
+  .piaget .tag{background:rgba(99,164,247,0.12);color:var(--piaget)}
+  .vygotsky .tag{background:rgba(193,137,247,0.12);color:var(--vygotsky)}
+  .freud .tag{background:rgba(214,0,120,0.08);color:var(--freud)}
+  .level h4{margin:6px 0 0;font-size:16px}
+  .level p{margin:8px 0 0;color:var(--muted);font-size:13px}
+  /* modal */
+  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:40}
+  .modal{background:#fff;padding:18px;border-radius:14px;max-width:760px;width:96%;box-shadow:0 16px 44px rgba(0,0,0,0.25);max-height:88vh;overflow:auto}
+  .modal h3{margin-top:0}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .small{font-size:13px;color:var(--muted)}
+  .controls{display:flex;gap:8px;flex-wrap:wrap}
+  .btn{padding:10px 14px;border-radius:12px;border:none;background:#fff;cursor:pointer;box-shadow:0 6px 14px rgba(0,0,0,0.06)}
+  .btn.primary{background:var(--piaget);color:#fff;border:0}
+  .btn.vyg{background:var(--vygotsky);color:#fff}
+  .btn.fre{background:var(--freud);color:#fff}
+  footer{margin-top:18px;padding:12px;text-align:center;color:var(--muted);font-size:13px}
+  /* responsive */
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr}
+    .content{grid-template-columns:1fr}
+    .authors{flex-direction:column}
+    .levels{grid-template-columns:1fr}
+  }
+  /* subtle animations */
+  .float{animation:float 6s ease-in-out infinite}
+  @keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-8px)}100%{transform:translateY(0)}}
+  .stitch{position:relative}
+  .stitch:after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:4px;background:repeating-linear-gradient(90deg, rgba(0,0,0,0.06), rgba(0,0,0,0.06) 6px, transparent 6px, transparent 12px);border-radius:4px}
+  .watercolor{background-image: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12), transparent 10%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.06), transparent 10%) ;border:1px dashed rgba(0,0,0,0.03)}
+  .qr{width:120px;height:120px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#fff,#fff8f8);box-shadow:0 6px 20px rgba(0,0,0,0.06)}
+  .muted-box{background:#fff;padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,0.04)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <header>
+      <div class="logo float"><img src="/mnt/data/f999db2c-099a-4fae-8366-e0eb11c8b3a5.png" alt="logo"></div>
+      <div>
+        <h1>MASTER CLASS DE COSTURA CREATIVA</h1>
+        <div class="subtitle">“Dándole vida a tus creaciones y diseños” · IPES FA · Ushuaia · 28–30 nov · 10 hs</div>
+        <nav>
+          <button class="tab active" data-show="home">Inicio</button>
+          <button class="tab" data-show="piaget">Piaget</button>
+          <button class="tab" data-show="vygotsky">Vygotsky</button>
+          <button class="tab" data-show="freud">Freud</button>
+          <button class="tab" data-show="info">Información</button>
+        </nav>
+      </div>
+    </header>
+
+    <div class="hero">
+      <div class="panel">
+        <div id="home" class="section">
+          <h2 class="stitch">Bienvenidos a la Master Class</h2>
+          <p class="small">Aprendé a diseñar, crear y fabricar distintos bolsos y carteras de acuerdo con tu nivel de conocimiento. Tres grandes maestros te guiarán desde enfoques distintos: la acción, la cooperación y la introspección.</p>
+
+          <div class="timeline">
+            <div class="day"><strong>Día 1</strong><span>Momento Piaget</span></div>
+            <div class="day"><strong>Día 2</strong><span>Momento Vygotsky</span></div>
+            <div class="day"><strong>Día 3</strong><span>Momento Freud</span></div>
+          </div>
+
+          <div class="authors">
+            <div class="author piaget">
+              <div class="avatar"><img src="/mnt/data/fc94923073a21b4104bb297c106dd9ee.jpg" alt="Piaget"></div>
+              <div>
+                <h3>Jean Piaget</h3>
+                <p>El arquitecto del conocimiento · Aprender haciendo: la construcción del conocimiento paso a paso.</p>
+              </div>
+            </div>
+            <div class="author vygotsky">
+              <div class="avatar"><img src="/mnt/data/Gemini_Generated_Image_no1pl4no1pl4no1p.png" alt="Vygotsky"></div>
+              <div>
+                <h3>Lev Vygotsky</h3>
+                <p>El maestro invisible · Aprender con otros: la cooperación en la costura creativa.</p>
+              </div>
+            </div>
+            <div class="author freud">
+              <div class="avatar"><img src="/mnt/data/f999db2c-099a-4fae-8366-e0eb11c8b3a5.png" alt="Freud"></div>
+              <div>
+                <h3>Sigmund Freud</h3>
+                <p>El costurero del inconsciente · Coser el alma: la expresión del inconsciente a través del diseño.</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:14px;" class="muted-box">
+            <strong>Nota:</strong> Tocá las tarjetas de niveles en cada autor para ver objetivos, materiales y la propuesta completa (todo lo encontrado en las páginas 6–15 del documento).
+          </div>
+        </div>
+
+        <div id="piaget" class="section" style="display:none">
+          <h2 style="color:var(--piaget)">Jean Piaget · El arquitecto del conocimiento</h2>
+          <p class="small">Como psicólogo y biólogo suizo, Piaget es el maestro que enseña a pensar con las manos. Cree que aprender es construir, experimentar y equivocarse para volver a intentar. Su propuesta se centra en la acción, la exploración y la progresión cognitiva.</p>
+
+          <h4>Su lema</h4>
+          <p class="small">“Aprender no es copiar, es reinventar con las propias manos y la mente.”</p>
+
+          <h4>¿En qué consiste este momento?</h4>
+          <p class="small">Actividades organizadas por niveles, de menor a mayor complejidad. Todas las actividades de Piaget se realizan el Día 1, en distintos horarios según nivel. Organiza la clase en cuatro niveles (Aprendiz, Básico, Avanzado, Experto).</p>
+
+          <div class="levels">
+            <div class="level piaget" data-modal="piaget-aprendiz">
+              <div class="tag">Aprendiz</div>
+              <h4>Mi primer bolso de tela</h4>
+              <p>Objetivo: reconocer materiales y puntadas básicas · Duración: 1 h</p>
+            </div>
+            <div class="level piaget" data-modal="piaget-basico">
+              <div class="tag">Básico</div>
+              <h4>Bolsito con cierre y forro</h4>
+              <p>Objetivo: aplicar técnicas simples y ensamblado · Duración: 1 h 30</p>
+            </div>
+            <div class="level piaget" data-modal="piaget-avanzado">
+              <div class="tag">Avanzado</div>
+              <h4>Bolso estructurado con bolsillos</h4>
+              <p>Objetivo: integrar entretelas, cierres y refuerzos · Duración: 2 h</p>
+            </div>
+            <div class="level piaget" data-modal="piaget-experto">
+              <div class="tag">Experto</div>
+              <h4>Cartera diseño libre desde cero</h4>
+              <p>Objetivo: planificar y fabricar un bolso complejo · Duración: 3 h</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div id="vygotsky" class="section" style="display:none">
+          <h2 style="color:var(--vygotsky)">Lev Vygotsky · El maestro invisible</h2>
+          <p class="small">Psicólogo ruso que enfatiza la cooperación y el lenguaje. En su taller, el aprendizaje se construye socialmente: estaciones rotativas en las que los participantes se ayudan y crecen juntos.</p>
+
+          <h4>Su lema</h4>
+          <p class="small">“Entre hilos y agujas, nadie cose solo: aprendemos con otros, de otros y para otros.”</p>
+
+          <div class="levels">
+            <div class="level vygotsky" data-modal="vyg-aprendiz">
+              <div class="tag">Aprendiz</div>
+              <h4>Cosiendo con ayuda</h4>
+              <p>Aprender a coser con la ayuda de un participante del nivel básico · Duración: 45 min</p>
+            </div>
+            <div class="level vygotsky" data-modal="vyg-basico">
+              <div class="tag">Básico</div>
+              <h4>Trucos de cierre y esquinas perfectas</h4>
+              <p>Aprender terminaciones y manejo de cierres con apoyo práctico · Duración: 1 h</p>
+            </div>
+            <div class="level vygotsky" data-modal="vyg-avanzado">
+              <div class="tag">Avanzado</div>
+              <h4>Atajos creativos para estructurar bolsos</h4>
+              <p>Intercambio de técnicas y soluciones prácticas · Duración: 1 h</p>
+            </div>
+            <div class="level vygotsky" data-modal="vyg-experto">
+              <div class="tag">Experto</div>
+              <h4>Mentor creativo</h4>
+              <p>Enseñar a otros y planificar moldes y procesos · Duración: 1 h</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="freud" class="section" style="display:none">
+          <h2 style="color:var(--freud)">Sigmund Freud · El costurero del inconsciente</h2>
+          <p class="small">Freud propone usar la costura como vía para exploración emocional: cada elección estética puede revelar deseos, recuerdos y emociones. Su actividad invita a la introspección y la expresión personal.</p>
+
+          <h4>Su lema</h4>
+          <p class="small">“Cada puntada es un deseo que encuentra su forma.”</p>
+
+          <div class="levels">
+            <div class="level freud" data-modal="freud-aprendiz">
+              <div class="tag">Aprendiz</div>
+              <h4>Mi bolso y mis emociones</h4>
+              <p>Decoración y pintura textil representando emociones · Duración: 1 h 30</p>
+            </div>
+            <div class="level freud" data-modal="freud-basico">
+              <div class="tag">Básico</div>
+              <h4>El bolso de mis recuerdos</h4>
+              <p>Incorporar elementos simbólicos que narren recuerdos · Duración: 1 h 30</p>
+            </div>
+            <div class="level freud" data-modal="freud-avanzado">
+              <div class="tag">Avanzado</div>
+              <h4>Diseñar desde el deseo</h4>
+              <p>Crear un bolso inspirado en un anhelo o sueño · Duración: 2 h</p>
+            </div>
+            <div class="level freud" data-modal="freud-experto">
+              <div class="tag">Experto</div>
+              <h4>Interpretar mi obra</h4>
+              <p>Exposición final y explicación simbólica de la pieza · Duración: 2 h</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <aside class="side panel">
+        <div class="muted-box">
+          <h4>Información práctica</h4>
+          <p class="small">Modalidad: Presencial – talleres simultáneos por niveles. Dictado por los expertos invitados: Jean Piaget, Lev Vygotsky y Sigmund Freud.</p>
+          <ul class="small">
+            <li>Duración total: 3 días</li>
+            <li>Ubicación: IPES FA – Gobernador Deloqui y Rivadavia, Ushuaia</li>
+            <li>Horario: 10 hs</li>
+          </ul>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="muted-box watercolor">
+          <h4>Diseño y colores</h4>
+          <p class="small"><strong>Piaget</strong> · Azul turquesa #63A4F7 · lógica, estructura, líneas rectas.</p>
+          <p class="small"><strong>Vygotsky</strong> · Violeta morado #C189F7 · creatividad y cooperación.</p>
+          <p class="small"><strong>Freud</strong> · Rojo magenta #D60078 · emoción y expresividad.</p>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="muted-box">
+          <h4>Inscripción</h4>
+          <p class="small">Escaneá el código QR o contactanos para reservar tu lugar. Cupos limitados por nivel.</p>
+          <div style="display:flex;gap:12px;align-items:center;margin-top:10px">
+            <div class="qr"><img src="/mnt/data/fc94923073a21b4104bb297c106dd9ee.jpg" style="width:88px;height:88px;border-radius:8px;object-fit:cover"></div>
+            <div>
+              <button class="btn primary" onclick="alert('Formulario de inscripción (simulado)')">Inscribirme</button><br/>
+              <button class="btn" onclick="alert('Contacto: ipesfa@example.com')">Contacto</button>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+
+    <footer>
+      <small>Material y contenido extraído y organizado a partir del documento “Diseño e información” (páginas 6–15). Presentación interactiva generada para importar o usar como plantilla tipo Genially.</small>
+    </footer>
+  </div>
+</div>
+
+<!-- Modal structure (single modal reused) -->
+<div id="modal-backdrop" class="modal-backdrop">
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="btn" style="float:right" onclick="closeModal()">Cerrar ✕</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+  // Tab navigation
+  document.querySelectorAll('.tab').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      btn.classList.add('active');
+      const show = btn.dataset.show;
+      document.querySelectorAll('.section').forEach(s=>s.style.display='none');
+      document.getElementById(show).style.display = 'block';
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  });
+
+  // Modal content database (full info tomadas de páginas 6-15)
+  const modalData = {
+    "piaget-aprendiz": {
+      "title":"Aprendiz — Mi primer bolso de tela",
+      "content":"<p><strong>Objetivos:</strong> Reconocer materiales básicos y aprender las primeras puntadas. Realizar un mini bolso o estuche sencillo, aprendiendo las bases del armado y el acabado artesanal.</p><p><strong>Conocimientos previos:</strong> Ninguna experiencia previa en costura. Interés en el diseño y disposición a experimentar.</p><p><strong>Habilidades:</strong> Enhebrar una aguja, hacer puntadas básicas y unir piezas simples de tela.</p><p><strong>Materiales necesarios:</strong> Retazos de tela, aguja, hilo, botones grandes, tijeras sin punta, moldes simples.</p><p><strong>Producto final:</strong> Bolsito tipo sobre sin cierre.<p><em>Duración: 1 hora.</em></p>"
+    },
+    "piaget-basico": {
+      "title":"Básico — Bolsito con cierre y forro",
+      "content":"<p><strong>Objetivos:</strong> Fabricar un bolso pequeño con cierre funcional aplicando combinaciones de telas y costuras rectas.</p><p><strong>Conocimientos previos:</strong> Manejo básico del uso de tijeras, lápiz y papel.</p><p><strong>Habilidades:</strong> Familiarizarse con materiales, realizar puntadas y ensamblado simple.</p><p><strong>Materiales necesarios:</strong> Telas combinadas, cierre, alfileres, moldes rectos, hilo de colores.</p><p><strong>Producto final:</strong> Bolsito con cierre y forro.<br/><em>Duración: 1 hora y 30 minutos.</em></p>"
+    },
+    "piaget-avanzado": {
+      "title":"Avanzado — Bolso estructurado con bolsillos",
+      "content":"<p><strong>Objetivos:</strong> Integrar materiales más complejos (entretela, cierre, refuerzo) y confeccionar un bolso mediano con forma estructurada.</p><p><strong>Conocimientos previos:</strong> Manejo básico de puntadas a mano y capacidad para seguir un molde simple.</p><p><strong>Habilidades:</strong> Interpretar moldes simples y trasladarlos a la tela; unir piezas con distintas costuras.</p><p><strong>Materiales necesarios:</strong> Cuerina o lona, entretela, cierre metálico, máquina de coser.</p><p><strong>Producto final:</strong> Bolso mediano con forma estructurada.<br/><em>Duración: 2 horas.</em></p>"
+    },
+    "piaget-experto": {
+      "title":"Experto — Cartera diseño libre desde cero",
+      "content":"<p><strong>Objetivos:</strong> Planificar, diseñar y fabricar una cartera o bolso de autor con estructura, forro y detalles personalizados.</p><p><strong>Conocimientos previos:</strong> Dominio de técnicas de costura manual y a máquina; lectura y escalado de moldes.</p><p><strong>Habilidades:</strong> Diseñar desde cero, innovar en materiales y técnicas, documentar el proceso creativo.</p><p><strong>Materiales necesarios:</strong> Eco-cuero, herrajes, forro, cierre, máquina, moldes personalizados.</p><p><strong>Producto final:</strong> Cartera con estructura, forro y diseño original.<br/><em>Duración: 3 horas.</em></p>"
+    },
+
+    "vyg-aprendiz": {
+      "title":"Aprendiz — Cosiendo con ayuda",
+      "content":"<p><strong>Objetivos:</strong> Aprender a coser una costura recta con el acompañamiento de un participante del nivel básico, promoviendo la cooperación y el aprendizaje guiado.</p><p><strong>Conocimientos previos:</strong> Manejo básico de materiales de costura (aguja, hilo, tela).</p><p><strong>Habilidades:</strong> Coordinación motriz fina, precisión en la puntada y colaboración con un compañero más experimentado.</p><p><strong>Materiales necesarios:</strong> Retazos de tela simple, aguja, hilo, alfileres, regla y marcador textil.</p><p><strong>Producto final:</strong> Muestra de costura recta realizada en colaboración.<br/><em>Duración: 45 minutos.</em></p>"
+    },
+    "vyg-basico": {
+      "title":"Básico — Trucos de cierre y esquinas perfectas",
+      "content":"<p><strong>Objetivos:</strong> Aprender consejos prácticos de manipulación de cierres y terminaciones prolijas, guiado por un participante del nivel avanzado.</p><p><strong>Conocimientos previos:</strong> Capacidad para realizar costuras rectas y manejo básico de la máquina de coser.</p><p><strong>Habilidades:</strong> Aplicación de cierres y refuerzos; terminaciones precisas.</p><p><strong>Materiales necesarios:</strong> Telas combinadas, cierre, alfileres, tijeras y máquina de coser.</p><p><strong>Producto final:</strong> Bolso o muestra pequeña con cierre y esquinas reforzadas.<br/><em>Duración: 1 hora.</em></p>"
+    },
+    "vyg-avanzado": {
+      "title":"Avanzado — Atajos creativos para estructurar bolsos",
+      "content":"<p><strong>Objetivos:</strong> Incorporar técnicas de refuerzo rápido y simetría mediante el intercambio de experiencias con expertos y otros participantes.</p><p><strong>Conocimientos previos:</strong> Experiencia en confección de bolsos simples y manejo de materiales estructurantes.</p><p><strong>Habilidades:</strong> Aplicación de refuerzos internos, planificación estructural y estética.</p><p><strong>Materiales necesarios:</strong> Cuerina o lona, entretela, cierres metálicos, moldes, máquina de coser.</p><p><strong>Producto final:</strong> Bolso estructurado con refuerzo interior equilibrado y terminaciones prolijas.<br/><em>Duración: 1 hora.</em></p>"
+    },
+    "vyg-experto": {
+      "title":"Experto — Mentor creativo",
+      "content":"<p><strong>Objetivos:</strong> Enseñar a otros participantes cómo planificar moldes, gestionar tiempos y acompañar el proceso de confección con un enfoque reflexivo.</p><p><strong>Conocimientos previos:</strong> Dominio de técnicas avanzadas de costura y diseño.</p><p><strong>Habilidades:</strong> Capacidad de guía pedagógica y organización de proyectos.</p><p><strong>Materiales necesarios:</strong> Moldes, materiales textiles variados, máquina de coser y herramientas de medición.</p><p><strong>Producto final:</strong> Planificación y ejecución de un bolso completo con moldes detallados.<br/><em>Duración: 1 hora.</em></p>"
+    },
+
+    "freud-aprendiz": {
+      "title":"Aprendiz — Mi bolso y mis emociones",
+      "content":"<p><strong>Objetivos:</strong> Pintar o decorar su bolso con los colores que los representen a través de collage textil y pintura sobre tela; permitir que los participantes reconozcan y expresen sus emociones.</p><p><strong>Conocimientos previos:</strong> Ninguno; disposición para explorar colores y sensaciones.</p><p><strong>Habilidades:</strong> Identificación de emociones y su representación visual.</p><p><strong>Materiales necesarios:</strong> Bolso base, pinturas textiles, pinceles, retazos, botones, pegamento para tela.</p><p><strong>Producto final:</strong> Bolso decorado con colores y formas que representen emociones personales.<br/><em>Duración: 1 hora y 30 minutos.</em></p>"
+    },
+    "freud-basico": {
+      "title":"Básico — El bolso de mis recuerdos",
+      "content":"<p><strong>Objetivos:</strong> Permitir que los participantes reconozcan y expresen recuerdos personales incorporando elementos simbólicos.</p><p><strong>Conocimientos previos:</strong> Comprensión básica de técnicas decorativas.</p><p><strong>Habilidades:</strong> Selección de elementos simbólicos e integración técnica y emotiva.</p><p><strong>Materiales necesarios:</strong> Telas variadas, parches, botones antiguos, cintas, objetos pequeños con valor afectivo.</p><p><strong>Producto final:</strong> Bolso intervenido con elementos que representen recuerdos.<br/><em>Duración: 1 hora y 30 minutos.</em></p>"
+    },
+    "freud-avanzado": {
+      "title":"Avanzado — Diseñar desde el deseo",
+      "content":"<p><strong>Objetivos:</strong> Crear un bolso inspirado en algo que anhelan o sueñan; trabajo de introspección y boceto previo.</p><p><strong>Conocimientos previos:</strong> Dominio de técnicas de costura y diseño suficientes para desarrollar un modelo propio.</p><p><strong>Habilidades:</strong> Capacidad de conceptualizar y simbolizar ideas en formas concretas.</p><p><strong>Materiales necesarios:</strong> Boceto previo, telas elegidas, accesorios y herramientas de confección.</p><p><strong>Producto final:</strong> Bolso o cartera diseñada e inspirada en un deseo personal.<br/><em>Duración: 2 horas.</em></p>"
+    },
+    "freud-experto": {
+      "title":"Experto — Interpretar mi obra",
+      "content":"<p><strong>Objetivos:</strong> Exponer la cartera final explicando qué simboliza cada elección estética; promover la reflexión y comunicación estética.</p><p><strong>Conocimientos previos:</strong> Dominio técnico completo y experiencia en diseño de bolsos.</p><p><strong>Habilidades:</strong> Autoevaluación crítica y argumentación sobre el propio proceso creativo.</p><p><strong>Materiales necesarios:</strong> Bolso o cartera final y soporte visual para la exposición.</p><p><strong>Producto final:</strong> Presentación y exposición de la cartera final con explicación simbólica.<br/><em>Duración: 2 horas.</em></p>"
+    }
+  };
+
+  // attach click listeners to levels
+  document.querySelectorAll('.level').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const md = el.dataset.modal;
+      if(modalData[md]){
+        openModal(modalData[md].title, modalData[md].content);
+      } else {
+        openModal('Detalle','Información no disponible');
+      }
+    });
+  });
+
+  function openModal(title, html){
+    const body = document.getElementById('modal-body');
+    body.innerHTML = '<h3>'+title+'</h3>'+html+'<div style="margin-top:12px"><button class="btn" onclick="closeModal()">Cerrar</button></div>';
+    document.getElementById('modal-backdrop').style.display='flex';
+  }
+  function closeModal(){document.getElementById('modal-backdrop').style.display='none';}
+
+  // keyboard escape
+  document.addEventListener('keydown',e=>{if(e.key==='Escape') closeModal()});
+
+  // start: show home
+  document.getElementById('home').style.display='block';
+</script>
+</body>
+</html>
